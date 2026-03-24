@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Libre+Baskerville:wght@400&family=Montserrat:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-navy: #1B2340;
+  --color-navy-mid: #232D4B;
+  --color-gold: #C9A84C;
+  --color-gold-light: #E2C97E;
+  --color-purple: #6B3FA0;
+  --color-purple-light: #9B6DD6;
+  --color-ivory: #F7F5F0;
+  --color-white: #FFFFFF;
+  --color-text-dark: #1B2340;
+  --color-text-muted: #6B7280;
+  --color-button-muted: #8A8FA8;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Libre Baskerville', serif;
+  color: var(--color-text-dark);
+  background-color: var(--color-ivory);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.font-cormorant {
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.font-baskerville {
+  font-family: 'Libre Baskerville', serif;
+}
+
+.font-montserrat {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.small-caps {
+  font-variant: small-caps;
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
