@@ -10,9 +10,37 @@ export default function HeroSection() {
         viewBox="0 0 1200 800"
         preserveAspectRatio="xMidYMid slice"
       >
-        <ellipse cx="600" cy="400" rx="300" ry="180" fill="none" stroke="#E8E4F0" strokeWidth="1" opacity="0.4" />
-        <ellipse cx="600" cy="400" rx="420" ry="250" fill="none" stroke="#E8E4F0" strokeWidth="1" opacity="0.4" />
-        <ellipse cx="600" cy="400" rx="540" ry="320" fill="none" stroke="#E8E4F0" strokeWidth="1" opacity="0.4" />
+        <ellipse
+          cx="600"
+          cy="400"
+          rx="300"
+          ry="180"
+          fill="none"
+          stroke="#E8E4F0"
+          strokeWidth="1"
+          opacity="0.4"
+        />
+        <ellipse
+          cx="600"
+          cy="400"
+          rx="420"
+          ry="250"
+          fill="none"
+          stroke="#E8E4F0"
+          strokeWidth="1"
+          opacity="0.4"
+        />
+        <ellipse
+          cx="600"
+          cy="400"
+          rx="540"
+          ry="320"
+          fill="none"
+          stroke="#E8E4F0"
+          strokeWidth="1"
+          opacity="0.4"
+        />
+
         <circle cx="750" cy="320" r="12" fill="#C5B8D8" opacity="0.3" />
         <circle cx="450" cy="480" r="8" fill="#C5B8D8" opacity="0.3" />
         <circle cx="850" cy="450" r="10" fill="#C5B8D8" opacity="0.3" />

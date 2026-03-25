@@ -24,6 +24,7 @@ export const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) 
   }
 
   if (allowedRoles && !allowedRoles.includes(profile.role)) {
+    // Redirect to correct dashboard based on role
     const dashboardPath = `/dashboard/${profile.role}`;
     return <Navigate to={dashboardPath} replace />;
   }

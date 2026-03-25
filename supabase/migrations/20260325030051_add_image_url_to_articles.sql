@@ -1,6 +1,13 @@
 /*
   # Add Image URL to Articles
-  - Add `image_url` column to `articles` table for AI-generated images
+
+  1. Changes
+    - Add `image_url` column to `articles` table to store AI-generated article images
+    - Column is optional (nullable) as existing articles may not have images
+  
+  2. Notes
+    - Images will be auto-generated using AI when articles are created
+    - Images will be landscape format displayed in full article view
 */
 
 DO $$

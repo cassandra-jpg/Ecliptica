@@ -22,14 +22,19 @@ interface BuildRequestPayload {
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { status: 200, headers: corsHeaders });
+    return new Response(null, {
+      status: 200,
+      headers: corsHeaders,
+    });
   }
 
   try {
     const payload: BuildRequestPayload = await req.json();
 
     const resendApiKey = Deno.env.get("RESEND_API_KEY");
-    if (!resendApiKey) throw new Error("RESEND_API_KEY is not configured");
+    if (!resendApiKey) {
+      throw new Error("RESEND_API_KEY is not configured");
+    }
 
     const emailBody = `
 New Build Request: ${payload.tier}
@@ -63,8 +68,16 @@ This request was submitted via the Ecliptica website.
 
     const resendResponse = await fetch("https://api.resend.com/emails", {
       method: "POST",
-      headers: { "Authorization": `Bearer ${resendApiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ from: "Ecliptica Build Requests <onboarding@resend.dev>", to: ["sales@ecliptica-ops.com", "info@ecliptica-ops.com"], subject: `New Build Request: ${payload.tier}`, text: emailBody }),
+      headers: {
+        "Authorization": `Bearer ${resendApiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "Ecliptica Build Requests <onboarding@resend.dev>",
+        to: ["sales@ecliptica-ops.com", "info@ecliptica-ops.com"],
+        subject: `New Build Request: ${payload.tier}`,
+        text: emailBody,
+      }),
     });
 
     if (!resendResponse.ok) {
@@ -74,9 +87,30 @@ This request was submitted via the Ecliptica website.
     }
 
     const resendData = await resendResponse.json();
-    return new Response(JSON.stringify({ success: true, id: resendData.id }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+
+    return new Response(
+      JSON.stringify({ success: true, id: resendData.id }),
+      {
+        status: 200,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
     console.error("Error sending build request email:", error);
-    return new Response(JSON.stringify({ error: error.message || "Failed to send build request" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return new Response(
+      JSON.stringify({
+        error: error.message || "Failed to send build request",
+      }),
+      {
+        status: 500,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+        },
+      }
+    );
   }
 });

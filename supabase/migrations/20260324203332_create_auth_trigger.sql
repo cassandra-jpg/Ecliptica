@@ -16,6 +16,7 @@
     - Profile creation is mandatory for all authenticated users
 */
 
+-- Create function to handle new user signup
 CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -29,6 +30,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+-- Create trigger on auth.users
 DO $$
 BEGIN
   IF NOT EXISTS (

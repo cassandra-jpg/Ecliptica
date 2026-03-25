@@ -49,6 +49,7 @@
     - Profile creation handled via trigger in next migration
 */
 
+-- Create profiles table
 CREATE TABLE IF NOT EXISTS profiles (
   id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email text UNIQUE NOT NULL,
@@ -60,6 +61,7 @@ CREATE TABLE IF NOT EXISTS profiles (
   created_at timestamptz DEFAULT now()
 );
 
+-- Create articles table
 CREATE TABLE IF NOT EXISTS articles (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   title text NOT NULL,
@@ -72,6 +74,7 @@ CREATE TABLE IF NOT EXISTS articles (
   updated_at timestamptz DEFAULT now()
 );
 
+-- Create member_feedback table
 CREATE TABLE IF NOT EXISTS member_feedback (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   email text,
@@ -79,6 +82,7 @@ CREATE TABLE IF NOT EXISTS member_feedback (
   created_at timestamptz DEFAULT now()
 );
 
+-- Create member_requests table
 CREATE TABLE IF NOT EXISTS member_requests (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   email text,
@@ -87,6 +91,7 @@ CREATE TABLE IF NOT EXISTS member_requests (
   created_at timestamptz DEFAULT now()
 );
 
+-- Create trigger to auto-update articles.updated_at
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -107,6 +112,7 @@ BEGIN
   END IF;
 END $$;
 
+-- Create constraint to enforce admin role only for specific emails
 CREATE OR REPLACE FUNCTION check_admin_role()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -130,6 +136,7 @@ BEGIN
   END IF;
 END $$;
 
+-- Enable Row Level Security on all tables
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE articles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE member_feedback ENABLE ROW LEVEL SECURITY;
