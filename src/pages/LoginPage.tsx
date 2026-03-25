@@ -21,6 +21,7 @@ export default function LoginPage() {
 
   const [memberOtpSent, setMemberOtpSent] = useState(false);
   const [otpCode, setOtpCode] = useState('');
+  const [signUpSuccess, setSignUpSuccess] = useState(false);
 
   const handleSignIn = async (e: FormEvent) => {
     e.preventDefault();
@@ -59,30 +60,23 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email,
-        password,
-      });
+      const { error } = await supabase
+        .from('registered_members')
+        .insert([{
+          email: email.toLowerCase().trim(),
+          first_name: firstName,
+          last_name: lastName,
+          company: businessName,
+          phone: phoneNumber || null,
+          title: titleRole,
+        }]);
 
-      if (authError) throw authError;
-
-      if (authData.user) {
-        const fullName = `${firstName} ${lastName}`.trim();
-
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .update({
-            full_name: fullName,
-            company: businessName,
-            title: titleRole,
-            phone: phoneNumber || null,
-          })
-          .eq('id', authData.user.id);
-
-        if (profileError) throw profileError;
-
-        navigate('/dashboard/client');
+      if (error) {
+        if (error.code === '23505') throw new Error('This email is already registered. Use the Members tab to sign in.');
+        throw error;
       }
+
+      setSignUpSuccess(true);
     } catch (err: any) {
       setError(err.message || 'Failed to sign up');
     } finally {
@@ -96,10 +90,19 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
+      const { data: isMember, error: rpcError } = await supabase
+        .rpc('is_registered_member', { member_email: email });
+
+      if (rpcError) throw rpcError;
+
+      if (!isMember) {
+        throw new Error('This email is not registered. Please sign up first.');
+      }
+
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          shouldCreateUser: false,
+          shouldCreateUser: true,
         },
       });
 
@@ -190,6 +193,7 @@ export default function LoginPage() {
               onClick={() => {
                 setLoginType('signup');
                 setError('');
+                setSignUpSuccess(false);
               }}
               className={`px-6 py-3 font-montserrat text-xs tracking-[0.25em] uppercase transition-all duration-300 ${
                 loginType === 'signup' ? 'border-b-2' : ''
@@ -249,30 +253,30 @@ export default function LoginPage() {
                 className="font-baskerville text-base mb-10"
                 style={{ color: 'var(--color-text-muted)' }}
               >
-                
+
               </p>
 
-              <form onSubmit={handleSignUp} className="space-y-6">
-                <div>
-                  <input
-                    type="password"
-                    placeholder="Create Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full border-0 border-b bg-transparent py-4 font-montserrat text-sm transition-colors focus:outline-none"
-                    style={{
-                      borderColor: '#D1D5DB',
-                      color: 'var(--color-text-dark)',
-                    }}
-                    onFocus={(e) => {
-                      e.currentTarget.style.borderColor = 'var(--color-gold)';
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#D1D5DB';
-                    }}
-                    required
-                  />
+              {signUpSuccess ? (
+                <div className="space-y-6">
+                  <div className="p-6 border" style={{ borderColor: 'var(--color-gold)', backgroundColor: 'rgba(201, 170, 113, 0.08)' }}>
+                    <p className="font-cormorant text-2xl mb-3" style={{ color: 'var(--color-navy)' }}>Registration Complete</p>
+                    <p className="font-montserrat text-xs tracking-wider leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+                      Your membership has been registered. Use the Members tab to sign in with a one-time access code sent to your email.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => { setLoginType('member'); setSignUpSuccess(false); setEmail(''); }}
+                    className="w-full font-montserrat text-xs tracking-[0.25em] uppercase py-5 transition-all duration-300"
+                    style={{ backgroundColor: 'var(--color-navy)', color: 'var(--color-white)' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--color-gold)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'var(--color-navy)'; }}
+                  >
+                    Go to Members Access
+                  </button>
                 </div>
+              ) : (
+              <form onSubmit={handleSignUp} className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <input
@@ -430,6 +434,7 @@ export default function LoginPage() {
                   Member access includes Growth Diagnostic, Acquisition Simulator, Newsletter, and Member Tools.
                 </p>
               </form>
+              )}
             </>
           ) : loginType === 'member' ? (
             <>
