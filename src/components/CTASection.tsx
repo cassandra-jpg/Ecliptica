@@ -12,7 +12,7 @@ export default function CTASection() {
           className="font-cormorant text-4xl md:text-5xl lg:text-6xl font-light mb-8"
           style={{ color: 'var(--color-white)' }}
         >
-          Most Companies Optimize Pipelines. We Obsolete Them.
+          Performance Has a Limit. Systems Do Not.
         </h2>
 
         <a

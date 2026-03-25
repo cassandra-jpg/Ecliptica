@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import HeroSection from '../components/HeroSection';
 import ArchitectureShiftSection from '../components/ArchitectureShiftSection';
 import AISalesSection from '../components/AISalesSection';

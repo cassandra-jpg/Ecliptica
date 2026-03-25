@@ -28,6 +28,7 @@ export type Article = {
   full_content: string | null;
   publisher: string | null;
   published: boolean;
+  image_url: string | null;
   created_at: string;
   updated_at: string;
 };

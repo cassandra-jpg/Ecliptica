@@ -42,11 +42,13 @@ export default function Sidebar() {
       >
         <div className="p-6 flex flex-col h-full overflow-y-auto">
           <div className="flex flex-col items-center mb-8">
-            <img
-              src="/iconic-sidebar.png"
-              alt="Ecliptica"
-              className="w-auto h-16"
-            />
+            <Link to="/" onClick={() => setIsOpen(false)}>
+              <img
+                src="/iconic-sidebar.png"
+                alt="Ecliptica"
+                className="w-auto h-16 cursor-pointer transition-opacity hover:opacity-80"
+              />
+            </Link>
           </div>
 
           <nav className="flex-1">
@@ -67,7 +69,7 @@ export default function Sidebar() {
                 >
                   <div className="mt-3 ml-4 space-y-2">
                     <a
-                      href="#sales-systems"
+                      href="/#sales-systems"
                       className="block font-montserrat text-xs tracking-wider uppercase transition-all hover:border-l-2 pl-2"
                       style={{
                         color: 'var(--color-gold)',
@@ -82,7 +84,7 @@ export default function Sidebar() {
                       The Sales Systems
                     </a>
                     <a
-                      href="#ai-sales-systems"
+                      href="/#ai-sales-systems"
                       className="block font-montserrat text-xs tracking-wider uppercase transition-all hover:border-l-2 pl-2"
                       style={{
                         color: 'var(--color-gold)',
@@ -97,7 +99,7 @@ export default function Sidebar() {
                       The Intelligence Systems
                     </a>
                     <a
-                      href="mailto:sales@ecliptica-ops.com?subject=Demo%20Request%20via%20Ecliptica.com"
+                      href="/#engineered-intelligence"
                       className="block font-montserrat text-xs tracking-wider uppercase transition-all hover:border-l-2 pl-2"
                       style={{
                         color: 'var(--color-gold)',
@@ -131,9 +133,10 @@ export default function Sidebar() {
                 >
                   <div className="mt-3 ml-4 space-y-2">
                     <a
-                      href="#"
+                      href="/#ma"
                       className="block font-montserrat text-xs tracking-wider uppercase transition-all hover:border-l-2 pl-2"
                       style={{ color: '#C9A84C' }}
+                      onClick={() => setIsOpen(false)}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.borderColor = 'rgba(201, 168, 76, 0.8)';
                         e.currentTarget.style.filter = 'brightness(1.2)';
@@ -146,39 +149,10 @@ export default function Sidebar() {
                       Full Suite
                     </a>
                     <a
-                      href="#"
+                      href="/#ma-conversation"
                       className="block font-montserrat text-xs tracking-wider uppercase transition-all hover:border-l-2 pl-2"
                       style={{ color: '#C9A84C' }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.borderColor = 'rgba(201, 168, 76, 0.8)';
-                        e.currentTarget.style.filter = 'brightness(1.2)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.borderColor = 'transparent';
-                        e.currentTarget.style.filter = 'brightness(1)';
-                      }}
-                    >
-                      Growth Diagnostic
-                    </a>
-                    <a
-                      href="#"
-                      className="block font-montserrat text-xs tracking-wider uppercase transition-all hover:border-l-2 pl-2"
-                      style={{ color: '#C9A84C' }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.borderColor = 'rgba(201, 168, 76, 0.8)';
-                        e.currentTarget.style.filter = 'brightness(1.2)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.borderColor = 'transparent';
-                        e.currentTarget.style.filter = 'brightness(1)';
-                      }}
-                    >
-                      Acquisition Simulator
-                    </a>
-                    <a
-                      href="mailto:sales@ecliptica-ops.com?subject=Demo%20Request%20via%20Ecliptica.com"
-                      className="block font-montserrat text-xs tracking-wider uppercase transition-all hover:border-l-2 pl-2"
-                      style={{ color: '#C9A84C' }}
+                      onClick={() => setIsOpen(false)}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.borderColor = 'rgba(201, 168, 76, 0.8)';
                         e.currentTarget.style.filter = 'brightness(1.2)';
@@ -210,7 +184,7 @@ export default function Sidebar() {
                 >
                   <div className="mt-3 ml-4 space-y-2">
                     <a
-                      href="#faqs"
+                      href="/#faqs"
                       className="block font-montserrat text-xs tracking-wider uppercase transition-all hover:border-l-2 pl-2"
                       style={{ color: '#C9A84C' }}
                       onClick={() => setIsOpen(false)}
