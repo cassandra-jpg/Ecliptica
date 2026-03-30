@@ -1,11 +1,13 @@
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
 
 type LoginType = 'signin' | 'signup' | 'member';
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { user, profile, loading: authLoading } = useAuth();
   const [loginType, setLoginType] = useState<LoginType>('signup');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,33 +25,26 @@ export default function LoginPage() {
   const [otpCode, setOtpCode] = useState('');
   const [signUpSuccess, setSignUpSuccess] = useState(false);
 
+  useEffect(() => {
+    if (!authLoading && user && profile) {
+      navigate(`/dashboard/${profile.role}`, { replace: true });
+    }
+  }, [authLoading, user, profile, navigate]);
+
   const handleSignIn = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) throw error;
-
-      if (data.user) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', data.user.id)
-          .maybeSingle();
-
-        if (profile) {
-          navigate(`/dashboard/${profile.role}`);
-        }
-      }
     } catch (err: any) {
       setError(err.message || 'Failed to sign in');
-    } finally {
       setLoading(false);
     }
   };
@@ -99,14 +94,20 @@ export default function LoginPage() {
         throw new Error('This email is not registered. Please sign up first.');
       }
 
-      const { error } = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          shouldCreateUser: true,
-        },
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/member-otp`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({ action: 'send', email }),
+        }
+      );
 
-      if (error) throw error;
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to send access code');
 
       setMemberOtpSent(true);
     } catch (err: any) {
@@ -122,13 +123,27 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.verifyOtp({
-        email,
-        token: otpCode,
-        type: 'email',
+      const res = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/member-otp`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({ action: 'verify', email, code: otpCode }),
+        }
+      );
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Invalid access code');
+
+      const { error: verifyError } = await supabase.auth.verifyOtp({
+        token_hash: data.hashed_token,
+        type: 'magiclink',
       });
 
-      if (error) throw error;
+      if (verifyError) throw verifyError;
 
       navigate('/members');
     } catch (err: any) {
@@ -449,7 +464,7 @@ export default function LoginPage() {
                 className="font-baskerville text-base mb-10"
                 style={{ color: 'var(--color-text-muted)' }}
               >
-                {memberOtpSent ? 'Enter the code sent to your email.' : 'Passwordless access for members.'}
+                {memberOtpSent ? 'Enter the 5-digit code sent to your email.' : 'Passwordless access for members.'}
               </p>
 
               {!memberOtpSent ? (
@@ -510,9 +525,10 @@ export default function LoginPage() {
                   <div>
                     <input
                       type="text"
-                      placeholder="Access Code"
+                      placeholder="5-Digit Code"
+                      maxLength={5}
                       value={otpCode}
-                      onChange={(e) => setOtpCode(e.target.value)}
+                      onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
                       className="w-full border-0 border-b bg-transparent py-4 font-montserrat text-sm transition-colors focus:outline-none"
                       style={{
                         borderColor: '#D1D5DB',
