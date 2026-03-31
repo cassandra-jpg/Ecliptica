@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import BuildRequestModal from './BuildRequestModal';
+import DemoRequestModal from './DemoRequestModal';
 
 type BuildTier = 'Enterprise' | 'Principal' | 'Studio';
 
 export default function EngineeredIntelligenceSection() {
   const [modalTier, setModalTier] = useState<BuildTier | null>(null);
   const [confirmationMessage, setConfirmationMessage] = useState<BuildTier | null>(null);
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
 
   useEffect(() => {
     if (confirmationMessage) {
@@ -26,7 +28,6 @@ export default function EngineeredIntelligenceSection() {
       className="min-h-screen py-20 px-6 flex items-center justify-center relative overflow-hidden"
       style={{ backgroundColor: 'var(--color-navy)' }}
     >
-      {/* Pulsing dot pattern background */}
       <div
         className="absolute inset-0 opacity-[0.03]"
         style={{
@@ -58,10 +59,8 @@ export default function EngineeredIntelligenceSection() {
           We customize the processes and data architecture to your team's structure, market dynamics, and growth trajectory. The result is a system that compounds performance instead of requiring it.
         </p>
 
-        {/* Full-width gold rule */}
         <div className="w-full h-px mb-16" style={{ backgroundColor: 'var(--color-gold)' }} />
 
-        {/* Call to action */}
         <p
           className="font-montserrat text-xs tracking-[0.35em] uppercase mb-12"
           style={{ color: 'var(--color-gold)' }}
@@ -69,9 +68,7 @@ export default function EngineeredIntelligenceSection() {
           Select Your Build
         </p>
 
-        {/* Three build option tabs */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {/* Enterprise */}
           <button
             onClick={() => setModalTier('Enterprise')}
             className="border p-8 text-center transition-all duration-300 hover:bg-white hover:bg-opacity-5 relative"
@@ -105,7 +102,6 @@ export default function EngineeredIntelligenceSection() {
             )}
           </button>
 
-          {/* Principal */}
           <button
             onClick={() => setModalTier('Principal')}
             className="border p-8 text-center transition-all duration-300 hover:bg-white hover:bg-opacity-5 relative"
@@ -139,7 +135,6 @@ export default function EngineeredIntelligenceSection() {
             )}
           </button>
 
-          {/* Studio */}
           <button
             onClick={() => setModalTier('Studio')}
             className="border p-8 text-center transition-all duration-300 hover:bg-white hover:bg-opacity-5 relative"
@@ -174,10 +169,8 @@ export default function EngineeredIntelligenceSection() {
           </button>
         </div>
 
-        {/* Divider */}
         <div className="w-full h-px mb-8" style={{ backgroundColor: 'rgba(201, 168, 76, 0.3)' }} />
 
-        {/* Live demo option */}
         <p
           className="font-baskerville text-base italic mb-6"
           style={{ color: 'rgba(255, 255, 255, 0.7)' }}
@@ -185,8 +178,8 @@ export default function EngineeredIntelligenceSection() {
           Not sure which build fits your needs?
         </p>
 
-        <a
-          href="mailto:sales@ecliptica-ops.com?subject=Demo%20Request%20via%20Ecliptica.com"
+        <button
+          onClick={() => setIsDemoModalOpen(true)}
           className="px-12 py-4 border font-montserrat text-xs tracking-[0.25em] uppercase transition-all duration-300 hover:bg-white hover:bg-opacity-5"
           style={{
             borderColor: 'var(--color-gold)',
@@ -194,7 +187,7 @@ export default function EngineeredIntelligenceSection() {
           }}
         >
           Request a Live Demo
-        </a>
+        </button>
       </div>
 
       {modalTier && (
@@ -205,6 +198,13 @@ export default function EngineeredIntelligenceSection() {
           onSuccess={() => handleSuccess(modalTier)}
         />
       )}
+
+      <DemoRequestModal
+        isOpen={isDemoModalOpen}
+        onClose={() => setIsDemoModalOpen(false)}
+        sourcePage={window.location.pathname}
+        sourceSection="engineered-intelligence"
+      />
 
       <style>{`
         @keyframes pulse {

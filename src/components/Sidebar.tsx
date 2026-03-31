@@ -1,13 +1,20 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
+import DemoRequestModal from './DemoRequestModal';
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
 
   const toggleAccordion = (section: string) => {
     setActiveSection(activeSection === section ? null : section);
+  };
+
+  const handleDemoClick = () => {
+    setIsOpen(false);
+    setIsDemoModalOpen(true);
   };
 
   return (
@@ -98,21 +105,23 @@ export default function Sidebar() {
                     >
                       The Intelligence Systems
                     </a>
-                    <a
-                      href="/#engineered-intelligence"
-                      className="block font-montserrat text-xs tracking-wider uppercase transition-all hover:border-l-2 pl-2"
+                    <button
+                      onClick={handleDemoClick}
+                      className="block font-montserrat text-xs tracking-wider uppercase transition-all hover:border-l-2 pl-2 text-left w-full"
                       style={{
                         color: 'var(--color-gold)',
                         letterSpacing: '0.15em',
                         fontSize: '11px'
                       }}
-                      onClick={() => setIsOpen(false)}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.borderColor = 'var(--color-gold)';
                       }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = 'transparent';
+                      }}
                     >
                       Request Live Demo
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -227,6 +236,13 @@ export default function Sidebar() {
           </nav>
         </div>
       </aside>
+
+      <DemoRequestModal
+        isOpen={isDemoModalOpen}
+        onClose={() => setIsDemoModalOpen(false)}
+        sourcePage={window.location.pathname}
+        sourceSection="sidebar"
+      />
     </>
   );
 }
