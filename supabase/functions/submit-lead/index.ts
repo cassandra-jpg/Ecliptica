@@ -142,7 +142,7 @@ async function sendNotificationEmail(data: LeadSubmission): Promise<boolean> {
         Authorization: `Bearer ${resendApiKey}`,
       },
       body: JSON.stringify({
-        from: "Ecliptica <notifications@ecliptica-ops.com>",
+        from: "Ecliptica <notifications@updates.ecliptica-ops.com>",
         to: NOTIFICATION_EMAILS,
         reply_to: data.email || undefined,
         subject: generateEmailSubject(data.formType, data.businessName),
