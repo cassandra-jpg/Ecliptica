@@ -1,4 +1,9 @@
+import { useState } from 'react';
+import DemoRequestModal from './DemoRequestModal';
+
 export default function HeroSection() {
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
+
   return (
     <section
       className="min-h-screen flex items-center justify-center relative overflow-hidden"
@@ -77,8 +82,8 @@ export default function HeroSection() {
           Custom-built pipeline systems, powered by 17 years of proprietary signal
         </p>
 
-        <a
-          href="mailto:sales@ecliptica-ops.com?subject=Demo%20Request%20via%20Ecliptica.com"
+        <button
+          onClick={() => setIsDemoModalOpen(true)}
           className="inline-block font-montserrat text-xs tracking-[0.25em] uppercase px-12 py-5 transition-all duration-300 hover:shadow-lg"
           style={{
             backgroundColor: 'var(--color-button-muted)',
@@ -92,8 +97,15 @@ export default function HeroSection() {
           }}
         >
           Request Live Demo
-        </a>
+        </button>
       </div>
+
+      <DemoRequestModal
+        isOpen={isDemoModalOpen}
+        onClose={() => setIsDemoModalOpen(false)}
+        sourcePage={window.location.pathname}
+        sourceSection="hero"
+      />
     </section>
   );
 }

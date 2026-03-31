@@ -88,6 +88,8 @@ export default function BuildRequestModal({ isOpen, onClose, tier, onSuccess }: 
           body: JSON.stringify({
             tier,
             ...formData,
+            sourcePage: window.location.pathname,
+            sourceSection: 'engineered-intelligence',
           }),
         }
       );

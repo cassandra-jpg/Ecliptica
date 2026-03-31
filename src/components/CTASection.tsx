@@ -1,4 +1,9 @@
+import { useState } from 'react';
+import DemoRequestModal from './DemoRequestModal';
+
 export default function CTASection() {
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
+
   return (
     <section
       id="demo"
@@ -15,8 +20,8 @@ export default function CTASection() {
           Performance Has a Limit. Systems Do Not.
         </h2>
 
-        <a
-          href="mailto:sales@ecliptica-ops.com?subject=Demo%20Request%20via%20Ecliptica.com"
+        <button
+          onClick={() => setIsDemoModalOpen(true)}
           className="inline-block font-montserrat text-xs tracking-[0.25em] uppercase px-12 py-5 transition-all duration-300 hover:shadow-lg mb-4"
           style={{
             backgroundColor: 'var(--color-button-muted)',
@@ -30,7 +35,7 @@ export default function CTASection() {
           }}
         >
           Request Live Demo
-        </a>
+        </button>
 
         <p
           className="font-montserrat text-xs tracking-[0.2em] uppercase mt-4"
@@ -39,6 +44,13 @@ export default function CTASection() {
           Custom AI Sales & Intelligence Systems. Built To Scale.
         </p>
       </div>
+
+      <DemoRequestModal
+        isOpen={isDemoModalOpen}
+        onClose={() => setIsDemoModalOpen(false)}
+        sourcePage={window.location.pathname}
+        sourceSection="cta"
+      />
     </section>
   );
 }

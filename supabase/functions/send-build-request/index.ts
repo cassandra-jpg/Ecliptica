@@ -1,4 +1,5 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -18,6 +19,8 @@ interface BuildRequestPayload {
   teamSizeAndTools: string;
   goals: string;
   knownIssues: string;
+  sourcePage?: string;
+  sourceSection?: string;
 }
 
 Deno.serve(async (req: Request) => {
@@ -30,6 +33,31 @@ Deno.serve(async (req: Request) => {
 
   try {
     const payload: BuildRequestPayload = await req.json();
+
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    const { error: dbError } = await supabase.from("lead_submissions").insert({
+      form_type: "build_request",
+      source_page: payload.sourcePage || "/",
+      source_section: payload.sourceSection || "engineered-intelligence",
+      name: `${payload.firstName} ${payload.lastName}`.trim(),
+      email: payload.email,
+      business_name: payload.company,
+      role: payload.title,
+      company_size: payload.teamSizeAndTools,
+      industry: payload.industry,
+      primary_goal: payload.goals,
+      message: payload.knownIssues,
+      phone: payload.phone,
+      metadata: { tier: payload.tier },
+      status: "new",
+    });
+
+    if (dbError) {
+      console.error("Database insert error:", dbError);
+    }
 
     const resendApiKey = Deno.env.get("RESEND_API_KEY");
     if (!resendApiKey) {
@@ -75,6 +103,7 @@ This request was submitted via the Ecliptica website.
       body: JSON.stringify({
         from: "Ecliptica Build Requests <onboarding@resend.dev>",
         to: ["sales@ecliptica-ops.com", "info@ecliptica-ops.com"],
+        reply_to: payload.email,
         subject: `New Build Request: ${payload.tier}`,
         text: emailBody,
       }),
