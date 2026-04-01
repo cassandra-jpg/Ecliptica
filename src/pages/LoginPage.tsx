@@ -1,5 +1,5 @@
 import { useState, FormEvent, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -7,6 +7,7 @@ type LoginType = 'signin' | 'signup' | 'member';
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { user, profile, loading: authLoading } = useAuth();
   const [loginType, setLoginType] = useState<LoginType>('signup');
   const [email, setEmail] = useState('');
@@ -24,6 +25,19 @@ export default function LoginPage() {
   const [memberOtpSent, setMemberOtpSent] = useState(false);
   const [otpCode, setOtpCode] = useState('');
   const [signUpSuccess, setSignUpSuccess] = useState(false);
+
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    const emailParam = searchParams.get('email');
+
+    if (tab === 'member') {
+      setLoginType('member');
+      if (emailParam) {
+        setEmail(decodeURIComponent(emailParam));
+        setMemberOtpSent(true);
+      }
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (!authLoading && user && profile) {

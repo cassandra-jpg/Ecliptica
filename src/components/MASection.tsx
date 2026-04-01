@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import MAConversationModal from './MAConversationModal';
+import MemberAccessModal from './MemberAccessModal';
 
 export default function MASection() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMemberModalOpen, setIsMemberModalOpen] = useState(false);
 
   return (
     <section
@@ -124,8 +126,9 @@ export default function MASection() {
         {/* Two tool cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16 max-w-4xl mx-auto">
           {/* Card 1 */}
-          <div
-            className="border p-8 transition-all duration-300 hover:border-2"
+          <button
+            onClick={() => setIsMemberModalOpen(true)}
+            className="border p-8 transition-all duration-300 hover:border-2 cursor-pointer text-left"
             style={{ borderColor: 'var(--color-gold)' }}
           >
             <p
@@ -140,14 +143,12 @@ export default function MASection() {
             >
               Map your acquisition readiness across capital structure, pipeline signal, and integration capacity.
             </p>
-          </div>
+          </button>
 
           {/* Card 2 */}
-          <a
-            href="https://ecliptica-ops.com/acquisition-simulator"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="border p-8 transition-all duration-300 hover:border-2 cursor-pointer block"
+          <button
+            onClick={() => setIsMemberModalOpen(true)}
+            className="border p-8 transition-all duration-300 hover:border-2 cursor-pointer text-left"
             style={{ borderColor: 'var(--color-gold)' }}
           >
             <p
@@ -162,7 +163,7 @@ export default function MASection() {
             >
               Model target scenarios, financing structures, and post-close outcomes before you move.
             </p>
-          </a>
+          </button>
         </div>
 
         {/* CTA Button */}
@@ -186,6 +187,11 @@ export default function MASection() {
       <MAConversationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+      />
+
+      <MemberAccessModal
+        isOpen={isMemberModalOpen}
+        onClose={() => setIsMemberModalOpen(false)}
       />
     </section>
   );
