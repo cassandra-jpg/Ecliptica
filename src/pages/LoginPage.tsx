@@ -71,6 +71,25 @@ export default function LoginPage() {
         throw error;
       }
 
+      fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/notify-member-signup`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({
+            email: email.toLowerCase().trim(),
+            firstName,
+            lastName,
+            company: businessName,
+            title: titleRole,
+            phone: phoneNumber || undefined,
+          }),
+        }
+      ).catch(console.error);
+
       setSignUpSuccess(true);
     } catch (err: any) {
       setError(err.message || 'Failed to sign up');
