@@ -1,4 +1,9 @@
+import { useState } from 'react';
+import MAConversationModal from './MAConversationModal';
+
 export default function MASection() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <section
       id="ma"
@@ -161,9 +166,9 @@ export default function MASection() {
         </div>
 
         {/* CTA Button */}
-        <a
+        <button
           id="ma-conversation"
-          href="mailto:sales@ecliptica-ops.com?subject=Demo%20Request%20via%20Ecliptica.com"
+          onClick={() => setIsModalOpen(true)}
           className="inline-block px-12 py-4 border font-montserrat text-xs tracking-[0.25em] uppercase transition-all duration-300 hover:opacity-80 mb-16"
           style={{
             backgroundColor: 'var(--color-navy)',
@@ -172,11 +177,16 @@ export default function MASection() {
           }}
         >
           Start a Conversation
-        </a>
+        </button>
 
         {/* Closing gold rule */}
         <div className="w-full h-px" style={{ backgroundColor: 'var(--color-gold)' }} />
       </div>
+
+      <MAConversationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </section>
   );
 }
