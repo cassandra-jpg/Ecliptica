@@ -46,7 +46,7 @@ Deno.serve(async (req: Request) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "Ecliptica <onboarding@resend.dev>",
+          from: "Ecliptica <notifications@updates.ecliptica-ops.com>",
           to: [normalizedEmail],
           subject: "Your Ecliptica Access Code",
           html: `

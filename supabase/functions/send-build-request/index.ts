@@ -101,7 +101,7 @@ This request was submitted via the Ecliptica website.
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Ecliptica Build Requests <onboarding@resend.dev>",
+        from: "Ecliptica Build Requests <notifications@updates.ecliptica-ops.com>",
         to: ["sales@ecliptica-ops.com", "info@ecliptica-ops.com"],
         reply_to: payload.email,
         subject: `New Build Request: ${payload.tier}`,
