@@ -1,0 +1,44 @@
+# Cloudflare Worker Configuration for Tool Authentication
+#
+# This is a template. You'll need to create separate workers for each tool subdomain,
+# each with its own LOVABLE_ORIGIN pointing to the actual Lovable app URL.
+#
+# SETUP INSTRUCTIONS:
+# 1. Install Wrangler CLI: npm install -g wrangler
+# 2. Login to Cloudflare: wrangler login
+# 3. Copy this file and customize for each tool
+# 4. Set secrets: wrangler secret put TOOL_TOKEN_SECRET
+# 5. Deploy: wrangler deploy
+
+name = "ecliptica-tool-auth"
+main = "tool-auth-worker.js"
+compatibility_date = "2024-01-01"
+
+# Environment variables (non-sensitive)
+[vars]
+MAIN_SITE_URL = "https://ecliptica-ops.com"
+# LOVABLE_ORIGIN will be set per-environment below
+
+# Production environment for Acquisition Simulator
+[env.acquisition-simulator]
+name = "ecliptica-acquisition-simulator-auth"
+routes = [
+  { pattern = "acquisitionsimulator.ecliptica-ops.com/*", zone_name = "ecliptica-ops.com" }
+]
+[env.acquisition-simulator.vars]
+MAIN_SITE_URL = "https://ecliptica-ops.com"
+# Set LOVABLE_ORIGIN via: wrangler secret put LOVABLE_ORIGIN --env acquisition-simulator
+
+# Production environment for Growth Diagnostic
+[env.growth-diagnostic]
+name = "ecliptica-growth-diagnostic-auth"
+routes = [
+  { pattern = "growthdiagnostic.ecliptica-ops.com/*", zone_name = "ecliptica-ops.com" }
+]
+[env.growth-diagnostic.vars]
+MAIN_SITE_URL = "https://ecliptica-ops.com"
+# Set LOVABLE_ORIGIN via: wrangler secret put LOVABLE_ORIGIN --env growth-diagnostic
+
+# Secrets to configure (use wrangler secret put):
+# - TOOL_TOKEN_SECRET: Must match the secret in Supabase Edge Functions
+# - LOVABLE_ORIGIN: The actual Lovable app URL (e.g., https://your-app.lovable.app)
