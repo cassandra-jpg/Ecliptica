@@ -1,26 +1,29 @@
-import { useState, useEffect } from 'react';
-import BuildRequestModal from './BuildRequestModal';
+import { useState } from 'react';
+import BuildTierModal from './BuildTierModal';
 import DemoRequestModal from './DemoRequestModal';
+import { type BuildTier } from '../data/buildTierContent';
 
-type BuildTier = 'Enterprise' | 'Principal' | 'Studio';
+const TIER_CARDS: { tier: BuildTier; title: string; subtitle: string }[] = [
+  {
+    tier: 'enterprise',
+    title: 'Enterprise',
+    subtitle: 'Large-scale operations',
+  },
+  {
+    tier: 'principal',
+    title: 'Principal',
+    subtitle: 'Mid-size teams, $5M\u2013$50M founders',
+  },
+  {
+    tier: 'studio',
+    title: 'Studio',
+    subtitle: 'Small teams, early-stage, individuals',
+  },
+];
 
 export default function EngineeredIntelligenceSection() {
-  const [modalTier, setModalTier] = useState<BuildTier | null>(null);
-  const [confirmationMessage, setConfirmationMessage] = useState<BuildTier | null>(null);
+  const [activeTier, setActiveTier] = useState<BuildTier | null>(null);
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
-
-  useEffect(() => {
-    if (confirmationMessage) {
-      const timer = setTimeout(() => {
-        setConfirmationMessage(null);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [confirmationMessage]);
-
-  const handleSuccess = (tier: BuildTier) => {
-    setConfirmationMessage(tier);
-  };
 
   return (
     <section
@@ -33,7 +36,7 @@ export default function EngineeredIntelligenceSection() {
         style={{
           backgroundImage: 'radial-gradient(circle, var(--color-gold) 1px, transparent 1px)',
           backgroundSize: '40px 40px',
-          animation: 'pulse 8s ease-in-out infinite'
+          animation: 'pulse 8s ease-in-out infinite',
         }}
       />
 
@@ -49,14 +52,17 @@ export default function EngineeredIntelligenceSection() {
           className="font-cormorant text-4xl md:text-5xl font-light mb-8 max-w-4xl mx-auto"
           style={{ color: 'var(--color-white)' }}
         >
-          Intelligence systems and sales architecture work together when they're built for how you operate.
+          Intelligence systems and sales architecture work together when they're built for how
+          you operate.
         </h2>
 
         <p
           className="font-baskerville text-lg max-w-3xl mx-auto mb-16"
           style={{ color: 'rgba(255, 255, 255, 0.6)' }}
         >
-          We customize the processes and data architecture to your team's structure, market dynamics, and growth trajectory. The result is a system that compounds performance instead of requiring it.
+          We customize the processes and data architecture to your team's structure, market
+          dynamics, and growth trajectory. The result is a system that compounds performance
+          instead of requiring it.
         </p>
 
         <div className="w-full h-px mb-16" style={{ backgroundColor: 'var(--color-gold)' }} />
@@ -69,107 +75,36 @@ export default function EngineeredIntelligenceSection() {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <button
-            onClick={() => setModalTier('Enterprise')}
-            className="border p-8 text-center transition-all duration-300 hover:bg-white hover:bg-opacity-5 relative"
-            style={{
-              borderColor: 'rgba(201, 168, 76, 0.3)',
-              borderWidth: '1px',
-            }}
-          >
-            {confirmationMessage === 'Enterprise' ? (
-              <div
-                className="font-montserrat text-xs tracking-[0.35em] uppercase"
-                style={{ color: 'var(--color-gold)' }}
+          {TIER_CARDS.map(({ tier, title, subtitle }) => (
+            <button
+              key={tier}
+              onClick={() => setActiveTier(tier)}
+              className="border p-8 text-center transition-all duration-300 hover:bg-white hover:bg-opacity-5 group"
+              style={{
+                borderColor: 'rgba(201, 168, 76, 0.3)',
+                borderWidth: '1px',
+              }}
+            >
+              <h3
+                className="font-cormorant text-3xl font-light mb-3"
+                style={{ color: 'var(--color-white)' }}
               >
-                REQUEST RECEIVED
-              </div>
-            ) : (
-              <>
-                <h3
-                  className="font-cormorant text-3xl font-light mb-3"
-                  style={{ color: 'var(--color-white)' }}
-                >
-                  Enterprise
-                </h3>
-                <p
-                  className="font-baskerville text-sm"
-                  style={{ color: 'rgba(255, 255, 255, 0.6)' }}
-                >
-                  Large-scale operations
-                </p>
-              </>
-            )}
-          </button>
-
-          <button
-            onClick={() => setModalTier('Principal')}
-            className="border p-8 text-center transition-all duration-300 hover:bg-white hover:bg-opacity-5 relative"
-            style={{
-              borderColor: 'rgba(201, 168, 76, 0.3)',
-              borderWidth: '1px',
-            }}
-          >
-            {confirmationMessage === 'Principal' ? (
-              <div
-                className="font-montserrat text-xs tracking-[0.35em] uppercase"
-                style={{ color: 'var(--color-gold)' }}
+                {title}
+              </h3>
+              <p
+                className="font-baskerville text-sm"
+                style={{ color: 'rgba(255, 255, 255, 0.6)' }}
               >
-                REQUEST RECEIVED
-              </div>
-            ) : (
-              <>
-                <h3
-                  className="font-cormorant text-3xl font-light mb-3"
-                  style={{ color: 'var(--color-white)' }}
-                >
-                  Principal
-                </h3>
-                <p
-                  className="font-baskerville text-sm"
-                  style={{ color: 'rgba(255, 255, 255, 0.6)' }}
-                >
-                  Mid-size teams, $5M–$50M founders
-                </p>
-              </>
-            )}
-          </button>
-
-          <button
-            onClick={() => setModalTier('Studio')}
-            className="border p-8 text-center transition-all duration-300 hover:bg-white hover:bg-opacity-5 relative"
-            style={{
-              borderColor: 'rgba(201, 168, 76, 0.3)',
-              borderWidth: '1px',
-            }}
-          >
-            {confirmationMessage === 'Studio' ? (
-              <div
-                className="font-montserrat text-xs tracking-[0.35em] uppercase"
-                style={{ color: 'var(--color-gold)' }}
-              >
-                REQUEST RECEIVED
-              </div>
-            ) : (
-              <>
-                <h3
-                  className="font-cormorant text-3xl font-light mb-3"
-                  style={{ color: 'var(--color-white)' }}
-                >
-                  Studio
-                </h3>
-                <p
-                  className="font-baskerville text-sm"
-                  style={{ color: 'rgba(255, 255, 255, 0.6)' }}
-                >
-                  Small teams, early-stage, individuals
-                </p>
-              </>
-            )}
-          </button>
+                {subtitle}
+              </p>
+            </button>
+          ))}
         </div>
 
-        <div className="w-full h-px mb-8" style={{ backgroundColor: 'rgba(201, 168, 76, 0.3)' }} />
+        <div
+          className="w-full h-px mb-8"
+          style={{ backgroundColor: 'rgba(201, 168, 76, 0.3)' }}
+        />
 
         <p
           className="font-baskerville text-base italic mb-6"
@@ -183,19 +118,18 @@ export default function EngineeredIntelligenceSection() {
           className="px-12 py-4 border font-montserrat text-xs tracking-[0.25em] uppercase transition-all duration-300 hover:bg-white hover:bg-opacity-5"
           style={{
             borderColor: 'var(--color-gold)',
-            color: 'var(--color-gold)'
+            color: 'var(--color-gold)',
           }}
         >
           Request a Live Demo
         </button>
       </div>
 
-      {modalTier && (
-        <BuildRequestModal
-          isOpen={!!modalTier}
-          onClose={() => setModalTier(null)}
-          tier={modalTier}
-          onSuccess={() => handleSuccess(modalTier)}
+      {activeTier && (
+        <BuildTierModal
+          isOpen={!!activeTier}
+          onClose={() => setActiveTier(null)}
+          tier={activeTier}
         />
       )}
 
@@ -210,10 +144,6 @@ export default function EngineeredIntelligenceSection() {
         @keyframes pulse {
           0%, 100% { opacity: 0.03; }
           50% { opacity: 0.06; }
-        }
-        input::placeholder,
-        textarea::placeholder {
-          color: rgba(255, 255, 255, 0.4);
         }
       `}</style>
     </section>
